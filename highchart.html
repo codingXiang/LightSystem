@@ -1,0 +1,97 @@
+<html>
+  <head>
+    <title>Light Value</title>
+    <meta name = "viewport" content = "width=device-width, initial-scale = 1">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <!-- JQuery -->
+    <script src="vendors/bower_components/jquery/dist/jquery.min.js"></script>
+    <!-- HighChart -->
+    <script src = "http://code.highcharts.com/stock/highstock.js"></script>
+    <script src = "http://code.highcharts.com/stock/modules/exporting.js"></script>
+
+    <script language = "javascript">
+      function initialize(){
+        var param = location.search.split("?");
+        console.log(decodeURI(param[1]))
+        $.ajax({
+          type: 'GET',
+          url : 'database.php',
+          data: decodeURI(param[1]),
+          dataType: 'json',
+          success : getDataSuccess
+        });
+      }
+      function getDataSuccess(data){
+        console.log(data)
+        console.log(" light value = " + data[0][2] + " , location name = " + data[0][3])
+        $("#con").empty();
+        var val = []; // 存放光敏電阻值
+        var stime = [];
+        var dataNum = data.length;
+        for (var i = 0 ; i < dataNum ; i++){
+          val.push(parseInt(data[i][2]));
+          stime.push(data[i][1].toString());
+        }
+        var ads = data[0][3].toString()
+        console.log(stime)
+        Highcharts.chart('con', {
+            title: {
+                text: "光度變化",
+            },
+            subtitle: {
+                text: ads,
+            },
+            scrollbar : {
+               enabled : true
+            },
+            chart : {
+               type: 'spline',
+               zoomType : 'x'
+            },
+            xAxis : {
+               tickInteral : 1,
+               labels : {
+                  enabled : true,
+                  formatter : function(){
+                     return stime[this.value];
+                  }
+               }
+            },
+            yAxis: {
+                title: {
+                    text: 'light Value'
+                },
+            },
+            tooltip : {
+                formatter : function(){
+                   return '<b>' + stime[this.x] + '</b><br><li>' + this.series.name + ": <b>" + this.y + '</b></li>';
+                }
+            },
+            series: [
+              {
+                  name: ads,
+                  data: val
+              }
+            ],
+            plotOptions: {
+                spline : {
+                    lineWidth : 3,
+                    states : {
+                        hover : {
+                            lineWidth : 5
+                        }
+                    },
+                },
+                marker : {
+                   enables : true
+                }
+            }
+        });
+      }
+      initialize();
+    </script>
+  </head>
+  <body>
+    <div id = "con"></div>
+  </bodu>
+</html>
