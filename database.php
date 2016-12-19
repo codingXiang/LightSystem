@@ -1,13 +1,13 @@
 <?php
   header("Content-Type:text/html; charset=utf-8");
   //user information
-  $host = "140.120.13.183";
-  $user = "sensor";
-  $pass = "123698745";
+  $host = "資料庫位址";
+  $user = "使用者名稱";
+  $pass = "使用者密碼";
 
   //database information
-  $databaseName = "sensor_network";
-  $tableName = "sensor_value";
+  $databaseName = "資料庫名稱";
+  $tableName = "table名稱";
 
   $username = $_POST['username'];
 
